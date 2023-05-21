@@ -39,26 +39,44 @@ $db = new Database();
                         $name = mysqli_real_escape_string($db->link,$_POST['name']);
                         $email = mysqli_real_escape_string($db->link,$_POST['email']);
                         $skill = mysqli_real_escape_string($db->link,$_POST['skill']);
-                        if ($name == '' || $email == '' || $skill == ''){
-                           $inputErr = "<span class='p-3 bg-danger text-white'>Field must not be empty</span>";
-                        }else{
+
+                        $inputErr = array();
+                        if (empty($name)){
+                            $inputErr['name'] = "Name is required";
+                        }if (empty($email)){
+                            $inputErr['email'] = "Email is required";
+                        }if (empty($skill)){
+                            $inputErr['skill'] = "Skill is required";
+                        }
+                        if (count($inputErr) == 0){
                             $query = "INSERT INTO `users`(`name`, `email`, `skill`) VALUES ('$name','$email','$skill')";
                             $inserData = $db->insert($query);
-                       }
+                            if ($inserData){
+                                $insert_msg = "Data Inserted Successfully!";
+                                // header("Location: index.php");
+                            }else{
+                                $insert_err_msg = "Data not Saved!";
+                            }
+                        }
+
                     }
+
                 ?>
 
                 <?php
-                    if (isset($inputErr)){
-                        echo $inputErr;
-                    }
-                ?>
+                if (isset($insert_msg)){
+                    ?>
+                    <div class="alert alert-success" role="alert">
+                        Success! <?=$insert_msg;?>
+                    </div>
+                <?php } ?>
 
                 <form action="create.php" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name" class="col-sm-2 col-form-label">Full Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="name" name="name" value="" placeholder="Enter Name" >
+                            <span class="text-danger"><?php if (isset($inputErr['name'])){echo $inputErr['name'];}?></span>
                         </div>
                     </div>
 
@@ -66,6 +84,7 @@ $db = new Database();
                         <label for="email" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
                             <input type="email" class="form-control" id="email" name="email" value="" placeholder="Enter Email" >
+                            <span class="text-danger"><?php if (isset($inputErr['email'])){echo $inputErr['email'];}?></span>
                         </div>
                     </div>
 
@@ -73,6 +92,7 @@ $db = new Database();
                         <label for="skill" class="col-sm-2 col-form-label">Skill</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="skill" name="skill" placeholder="Enter Skill" >
+                            <span class="text-danger"><?php if (isset($inputErr['skill'])){echo $inputErr['skill'];}?></span>
                         </div>
                     </div>
                     <div class="form-group mt-3">

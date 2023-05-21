@@ -27,10 +27,9 @@ class Database
     public function insert($query){
         $insert_row = $this->link->query($query) or die($this->link->error.__LINE__);
         if($insert_row){
-            header("Location: index.php?msg=".urlencode('Data Inserted Successfully.'));
-            exit();
+            return $insert_row;
         } else {
-            die("Error : (".$this->link->errno.")".$this->link->error);
+            return false;
         }
     }
 

@@ -5,7 +5,11 @@ include_once 'lib/Database.php';
 $db = new Database();
 
 ?>
-
+<script>
+    function ConfirmDelete() {
+        return confirm("Are you sure you want to delete?");
+    }
+</script>
 <!doctype html>
 <html lang="en">
 <head>
@@ -71,15 +75,19 @@ $db = new Database();
                             <td><?=$userData['name'];?></td>
                             <td><?=$userData['email'];?></td>
                             <td><?=$userData['skill'];?></td>
-                            <td><a href="edit.php?id=<?=$userData['id'];?>" class="btn btn-sm btn-warning">Edit</a> ||
-                                <a href="delete.php?id=<?=$userData['id'];?>" class="btn btn-sm btn-danger">Delete</a>
+                            <td><a href="update.php?id=<?= base64_encode($userData['id']);?>" class="btn btn-sm btn-warning">Edit</a> ||
+                                <a Onclick="return ConfirmDelete()" href="delete.php?id=<?php echo base64_encode($userData['id']);?>" class="btn btn-sm btn-danger">Delete</a>
                             </td>
                         </tr>
                     <?php
                             }
 
                         }else{
-                            echo '<span class="bg-danger">Data not Found!</span>';
+                            ?>
+                            <div class="alert alert-warning" role="alert">
+                                Data not Found!
+                            </div>
+                    <?php
                         }
                     ?>
 
